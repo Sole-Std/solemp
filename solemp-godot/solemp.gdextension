@@ -1,0 +1,14 @@
+[configuration]
+entry_symbol = "gdext_rust_init"
+compatibility_minimum = 4.5
+reloadable = true
+
+[libraries]
+linux.debug.x86_64 = "bin/debug/libsolemp_core.so"
+linux.release.x86_64 = "bin/release/libsolemp_core.so"
+windows.debug.x86_64 = "bin/debug/solemp_core.dll"
+windows.release.x86_64 = "bin/release/solemp_core.dll"
+macos.debug = "bin/debug/libsolemp_core.dylib"
+macos.release = "bin/release/libsolemp_core.dylib"
+macos.debug.arm64 = "bin/debug/libsolemp_core.dylib"
+macos.release.arm64 = "bin/release/libsolemp_core.dylib"
