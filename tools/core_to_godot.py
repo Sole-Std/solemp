@@ -3,6 +3,8 @@ import sys
 from enum import IntEnum
 import subprocess
 
+import tools.other_tools as other_tools
+
 class CompilationFlags(IntEnum):
     EXIT = 0
 
@@ -21,13 +23,26 @@ def tool_flag_parser(flag: int):
             print("Exiting program")
             sys.exit(0)
             
-        case CompilationFlags.RELEASE:
-            old_path = 'solemp-core/target/release/solemp_core.dll'
-            new_path = 'solemp-godot/bin/release/solemp_core.dll'
-            _move_file(old_path, new_path)
-        case CompilationFlags.DEBUG:
-            old_path = 'solemp-core/target/debug/solemp_core.dll'
-            new_path = 'solemp-godot/bin/debug/solemp_core.dll'
+        case CompilationFlags.RELEASE | CompilationFlags.DEBUG:
+            mode = "release" if flag == CompilationFlags.RELEASE else "debug"
+            os_type: str = other_tools.get_os_type()
+            
+            match os_type:
+                case "windows":
+                    old_name = "solemp_core.dll"
+                    new_name = "solemp_core.dll"
+                case "linux":
+                    old_name = "libsolemp_core.so"
+                    new_name = "libsolemp_core.so"
+                case "macos" | "macos_arm":
+                    old_name = "libsolemp_core.dylib"
+                    new_name = "libsolemp_core.dylib"
+                case _:
+                    print(f"Unknown OS type: {os_type}")
+                    return
+
+            old_path = f"solemp-core/target/{mode}/{old_name}"
+            new_path = f"solemp-godot/bin/{mode}/{new_name}"
             _move_file(old_path, new_path)
 
         case CompilationFlags.RELEASE_BUILD:
@@ -99,6 +114,25 @@ def _move_file(old_path, new_path):
     try:
         # Create missing nested folders in target path before moving file
         os.makedirs(os.path.dirname(new_path), exist_ok=True)
+        
+        if os.path.exists(new_path):
+            user_choice_bool: bool = True
+            while user_choice_bool:
+                user_choice = input(f"File '{new_path}' already exists. Overwrite? (y|N): ").lower().strip()
+                user_choice_bool = False
+                match user_choice:
+                    case 'y':
+                        os.remove(new_path)
+                        print(f"Previos file '{new_path}' was deleted")
+
+                    case 'n' | '':
+                        print("File overwriting canceled")
+                        return
+
+                    case _:
+                        print("Unknown input. Please enter 'y' or 'n'")
+                        user_choice_bool = True
+
         os.rename(old_path, new_path)
         print(f"File successful moved. From -> {old_path} to {new_path}")
     except FileNotFoundError:
