@@ -8,7 +8,7 @@
 
 ## What is Sole MP?
 
-Sole MP is a free, open-source framework for <a href="https://github.com/godotengine/godot">Godot</a> 4.7 writen in <a href="https://github.com/rust-lang/rust">Rust</a>
+Sole MP is a free, open-source framework for <a href="https://github.com/godotengine/godot">Godot</a> 4.5+ written in <a href="https://github.com/rust-lang/rust">Rust</a>
 ## License
 
 This project is licensed under the **MIT License**. See LICENSE for the full text.
