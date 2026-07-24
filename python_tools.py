@@ -8,16 +8,17 @@ def _tools_text():
               | |  | |_| || |_| || |___  ___) |
               |_|   \\___/  \\___/ |_____||____/ 
 
-1. Move realese compiled file from solemp-core to solemp-godot
+1. Move release compiled file from solemp-core to solemp-godot
 2. Move debug compiled file from solemp-core to solemp-godot
 
-3. Compile realese sole-mp core
+3. Compile release sole-mp core
 4. Compile debug sole-mp core
 
 0. Exit
 """)
 
 def _access_input() -> bool:
+    # Cheking confirmation from user and returning result
     access_input_work: bool = True
     while access_input_work:
         access_input: str = input("WARNING: Continue(y|N)")
@@ -35,6 +36,7 @@ def _access_input() -> bool:
                 access_input_work = True
 
 def input_parser():
+    # Сalling function depend on input result
     _tools_text()
     user_input: int = int(input())
 

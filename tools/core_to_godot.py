@@ -37,10 +37,12 @@ def tool_flag_parser(flag: int):
             return
 
 def _build_cargo(flag: str):
+    # Start building with command in solemp-core directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
     cargo_dir = os.path.join(project_root, "solemp-core")
 
+    # Start build or release command depend on flag 
     command = ["cargo", "build"]
     if flag == "release":
         command.append("--release")
@@ -49,13 +51,14 @@ def _build_cargo(flag: str):
 
     try:
         subprocess.run(command, cwd=cargo_dir, check=True)
-        print("Cargo build finished successfully!")
+        print("Cargo build finished successfully!") 
     except subprocess.CalledProcessError:
         print("Error: Cargo build failed!")
     except FileNotFoundError:
         print("Error: 'cargo' command not found. Cheak Rust intstallation")
 
 def _move_file(old_path, new_path):
+    # Moving files from old path to new path
     try:
         os.makedirs(os.path.dirname(new_path), exist_ok=True)
         os.rename(old_path, new_path)
