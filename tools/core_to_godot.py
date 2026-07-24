@@ -29,20 +29,17 @@ def tool_flag_parser(flag: int):
             
             match os_type:
                 case "windows":
-                    old_name = "solemp_core.dll"
-                    new_name = "solemp_core.dll"
+                    library_name = "solemp_core.dll"
                 case "linux":
-                    old_name = "libsolemp_core.so"
-                    new_name = "libsolemp_core.so"
+                    library_name = "libsolemp_core.so"
                 case "macos" | "macos_arm":
-                    old_name = "libsolemp_core.dylib"
-                    new_name = "libsolemp_core.dylib"
+                    library_name = "libsolemp_core.dylib"
                 case _:
                     print(f"Unknown OS type: {os_type}")
                     return
 
-            old_path = f"solemp-core/target/{mode}/{old_name}"
-            new_path = f"solemp-godot/bin/{mode}/{new_name}"
+            old_path = f"solemp-core/target/{mode}/{library_name}"
+            new_path = f"solemp-godot/bin/{mode}/{library_name}"
             _move_file(old_path, new_path)
 
         case CompilationFlags.RELEASE_BUILD:
