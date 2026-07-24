@@ -46,6 +46,7 @@ def tool_flag_parser(flag: int):
 
 def _build_cargo(flag: str):
     # Start building with command in solemp-core directory
+    # Resolve project root path relative to this script's location
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
     cargo_dir = os.path.join(project_root, "solemp-core")
@@ -58,6 +59,7 @@ def _build_cargo(flag: str):
     print(f"Running {' '.join(command)} in {cargo_dir}...")
 
     try:
+        # Execute cargo build inside the solemp-core subdirectory
         subprocess.run(command, cwd=cargo_dir, check=True)
         print("Cargo build finished successfully!") 
     except subprocess.CalledProcessError:
@@ -67,6 +69,7 @@ def _build_cargo(flag: str):
 
 def _clear_cargo(flag: str):
     # Start building with command in solemp-core directory
+    # Resolve project root path relative to this script's location
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
     cargo_dir = os.path.join(project_root, "solemp-core")
@@ -76,12 +79,14 @@ def _clear_cargo(flag: str):
     if flag == "release":
         command.append("--release")
     elif flag == "debug":
+        # Target dev profile artifacts specifically for clean command
         command.append("--profile")
         command.append("dev")
 
     print(f"Running {' '.join(command)} in {cargo_dir}...")
 
     try:
+        # Execute cargo clean inside the solemp-core subdirectory
         subprocess.run(command, cwd=cargo_dir, check=True)
         print("Cargo clear finished successfully!") 
     except subprocess.CalledProcessError:
@@ -92,6 +97,7 @@ def _clear_cargo(flag: str):
 def _move_file(old_path, new_path):
     # Moving files from old path to new path
     try:
+        # Create missing nested folders in target path before moving file
         os.makedirs(os.path.dirname(new_path), exist_ok=True)
         os.rename(old_path, new_path)
         print(f"File successful moved. From -> {old_path} to {new_path}")
