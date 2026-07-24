@@ -5,10 +5,15 @@ import subprocess
 
 class CompilationFlags(IntEnum):
     EXIT = 0
+
     RELEASE = 1
     DEBUG = 2
+
     RELEASE_BUILD = 3
     DEBUG_BUILD = 4
+
+    RELEASE_CLEAR = 5
+    DEBUG_CLEAR = 6
 
 def tool_flag_parser(flag: int):
     match flag:
@@ -20,7 +25,6 @@ def tool_flag_parser(flag: int):
             old_path = 'solemp-core/target/release/solemp_core.dll'
             new_path = 'solemp-godot/bin/release/solemp_core.dll'
             _move_file(old_path, new_path)
-
         case CompilationFlags.DEBUG:
             old_path = 'solemp-core/target/debug/solemp_core.dll'
             new_path = 'solemp-godot/bin/debug/solemp_core.dll'
@@ -28,9 +32,13 @@ def tool_flag_parser(flag: int):
 
         case CompilationFlags.RELEASE_BUILD:
             _build_cargo("release")
-
         case CompilationFlags.DEBUG_BUILD:
             _build_cargo("debug")
+
+        case CompilationFlags.RELEASE_CLEAR:
+            _clear_cargo("release")
+        case CompilationFlags.DEBUG_CLEAR:
+            _clear_cargo("debug")
 
         case _:
             print("Unimplemented flag")
@@ -54,6 +62,30 @@ def _build_cargo(flag: str):
         print("Cargo build finished successfully!") 
     except subprocess.CalledProcessError:
         print("Error: Cargo build failed!")
+    except FileNotFoundError:
+        print("Error: 'cargo' command not found. Cheak Rust intstallation")
+
+def _clear_cargo(flag: str):
+    # Start building with command in solemp-core directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    cargo_dir = os.path.join(project_root, "solemp-core")
+
+    # Start build or release command depend on flag 
+    command = ["cargo", "clean"]
+    if flag == "release":
+        command.append("--release")
+    elif flag == "debug":
+        command.append("--profile")
+        command.append("dev")
+
+    print(f"Running {' '.join(command)} in {cargo_dir}...")
+
+    try:
+        subprocess.run(command, cwd=cargo_dir, check=True)
+        print("Cargo clear finished successfully!") 
+    except subprocess.CalledProcessError:
+        print("Error: Cargo clear failed!")
     except FileNotFoundError:
         print("Error: 'cargo' command not found. Cheak Rust intstallation")
 
